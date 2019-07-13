@@ -1,0 +1,50 @@
+import pygame
+import conf
+class Animacio(pygame.sprite.Sprite):
+
+    # Inicialitza els estats. Són nombres enters.
+    NO_ATTACK, ATTACK, DIE =  1, 2, 3
+    # Inicialitza les transicions
+    WAIT, GO_ATTACK,  GO_DIE = range(3)
+
+    def __init__(self, matriu_imatges, pos):
+        super().__init__()
+        # Defineix l'estat inicial
+        self.estat = self.NO_ATTACK
+        self.llista_im = matriu_imatges
+        self.count = 0
+        self.nframes = len(self.llista_im[0])
+        self.image = self.llista_im[self.estat][0] 
+        self.rect = self.image.get_rect()
+        self.rect.top=pos[1]
+        self.rect.left=pos[0]
+        
+
+    def update(self):
+        self.count = self.count + 1
+        if self.count == self.nframes * 10:
+            self.count = 0
+            fila = self.estat
+            columna = self.count // 10
+            self.image = self.llista_im[fila][columna]
+
+
+
+    def canvia_estat(self, transicio=None):
+        """Actualitza l'estat en funció de l'estat actual i de la transició
+
+        """
+        # En aquest cas, l'estat final és independent de l'estat
+        # inicial: només depèn de la transició
+        estat_anterior = self.estat
+        if transicio == self.WAIT:
+            self.estat = self.NO_ATTACK
+        elif transicio == self.GO_ATTACK:
+            self.estat = self.ATTACK
+        elif transicio == self.GO_DIE:
+            self.estat = self.DIE
+    
+        else:
+            raise ValueError('Transició {} desconeguda'.format(transicio))
+        if self.estat != estat_anterior:
+            self.count = 0

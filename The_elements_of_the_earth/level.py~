@@ -1,0 +1,11 @@
+
+import pygame
+from platforms import Platform
+
+class Level:
+    def __init__(self):
+        self.platforms = pygame.sprite.Group()
+        self.list_platforms = [((75, 200), "platform.png"), ((150, 200), "platform.png")]
+        for p in self.list_platforms:
+            platform = Platform(p[0], p[1])
+            self.platforms.add(platform)
